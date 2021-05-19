@@ -114,8 +114,11 @@ namespace Hangfire.Couchbase
                 // create all the indexes
                 foreach ((string name, bool isPrimary, string[] fields) index in indexDefinition)
                 {
-                    if (index.isPrimary) manager.CreateN1qlPrimaryIndex(index.name, false);
-                    else manager.CreateN1qlIndex(index.name, false, index.fields);
+                    var query = $"CREATE INDEX `{index.name}` ON `{bucket.Name}` USING GSI WITH {{\"defer_build\":false, \"num_replica\":{Options.IndexReplicas}}}";
+                    var primaryQuery =
+                        $"CREATE PRIMARY INDEX `{index.name}` ON `{bucket.Name}` USING GSI WITH {{\"defer_build\":false, \"num_replica\":{Options.IndexReplicas}}}";
+                    if (index.isPrimary) Client.QueryAsync<dynamic>(primaryQuery);
+                    else Client.QueryAsync<dynamic>(query);
                 }
 
                 // check if all the required indexes are created

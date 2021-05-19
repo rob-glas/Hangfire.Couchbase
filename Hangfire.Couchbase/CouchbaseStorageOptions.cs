@@ -34,6 +34,11 @@ namespace Hangfire.Couchbase
         public TimeSpan QueuePollInterval { get; set; }
 
         /// <summary>
+        /// Gets or sets the replicas number for couchbase indexes
+        /// </summary>
+        public int IndexReplicas { get; set; }
+        
+        /// <summary>
         /// Create an instance of Couchbase Storage option with default values
         /// </summary>
         public CouchbaseStorageOptions()
@@ -42,6 +47,7 @@ namespace Hangfire.Couchbase
             ExpirationCheckInterval = TimeSpan.FromMinutes(2);
             CountersAggregateInterval = TimeSpan.FromMinutes(2);
             QueuePollInterval = TimeSpan.FromSeconds(15);
+            IndexReplicas = 2;
         }
     }
 }
